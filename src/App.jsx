@@ -153,7 +153,7 @@ function App() {
 
       <main className="game-content">
         <div className="image-container">
-          <img src={currentNode.image} alt="Scene" className="scene-image" />
+          <img src={`${import.meta.env.BASE_URL}${currentNode.image.replace(/^\//, '')}`} alt="Scene" className="scene-image" />
         </div>
         
         <div className="text-container">
