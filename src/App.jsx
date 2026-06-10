@@ -5,22 +5,41 @@ import './App.css';
 
 function App() {
   const [playerName, setPlayerName] = useState('');
+  const [birthDate, setBirthDate] = useState('');
+  const [hometown, setHometown] = useState('평양직할시');
   const [isGameStarted, setIsGameStarted] = useState(false);
   
   const [currentNodeId, setCurrentNodeId] = useState('start');
   const [chances, setChances] = useState(5);
   const [inventory, setInventory] = useState([]);
 
-  // {playerName} 치환 함수
+  // 생년월일에서 연도 4자리 추출 (예: 90 -> 1990, 05 -> 2005)
+  const getBirthYear = (yy) => {
+    const yearNum = parseInt(yy, 10);
+    if (yearNum <= 24) return `20${yy}`;
+    return `19${yy}`;
+  };
+
+  // {playerName}, {birthYear}, {hometown} 치환 함수
   const parseText = (text) => {
     if (!text) return '';
-    return text.replace(/{playerName}/g, playerName);
+    let parsed = text.replace(/{playerName}/g, playerName);
+    if (birthDate && birthDate.length === 6) {
+      const year = getBirthYear(birthDate.substring(0, 2));
+      parsed = parsed.replace(/{birthYear}/g, year);
+    }
+    parsed = parsed.replace(/{hometown}/g, hometown);
+    return parsed;
   };
 
   const handleStartGame = (e) => {
     e.preventDefault();
     if (playerName.trim() === '') {
       alert("이름을 입력해주세요!");
+      return;
+    }
+    if (birthDate.length !== 6 || isNaN(birthDate)) {
+      alert("생년월일을 숫자 6자리로 정확히 입력해주세요! (예: 900512)");
       return;
     }
     playClickSound();
@@ -36,17 +55,42 @@ function App() {
         </header>
         <main className="game-content intro-content">
           <form onSubmit={handleStartGame} className="name-form">
-            <label htmlFor="playerName">당신의 이름을 알려주세요</label>
-            <input 
-              type="text" 
-              id="playerName" 
-              value={playerName} 
-              onChange={(e) => setPlayerName(e.target.value)} 
-              placeholder="이름 입력 (예: 홍길동)"
-              autoComplete="off"
-              autoFocus
-            />
-            <button type="submit" className="choice-button start-btn">게임 시작하기</button>
+            <div className="input-group">
+              <label htmlFor="playerName">이름</label>
+              <input 
+                type="text" 
+                id="playerName" 
+                value={playerName} 
+                onChange={(e) => setPlayerName(e.target.value)} 
+                placeholder="(예: 홍길동)"
+                autoComplete="off"
+                autoFocus
+              />
+            </div>
+            
+            <div className="input-group">
+              <label htmlFor="birthDate">생년월일 (6자리)</label>
+              <input 
+                type="text" 
+                id="birthDate" 
+                value={birthDate} 
+                onChange={(e) => setBirthDate(e.target.value)} 
+                placeholder="(예: 900512)"
+                maxLength="6"
+                autoComplete="off"
+              />
+            </div>
+
+            <div className="input-group">
+              <label htmlFor="hometown">출신 지역</label>
+              <select id="hometown" value={hometown} onChange={(e) => setHometown(e.target.value)}>
+                <option value="평양직할시">평양직할시</option>
+                <option value="함경북도 청진시">함경북도 청진시</option>
+                <option value="량강도 혜산시">량강도 혜산시</option>
+              </select>
+            </div>
+
+            <button type="submit" className="choice-button start-btn" style={{marginTop: '10px'}}>여정 시작하기</button>
           </form>
         </main>
       </div>

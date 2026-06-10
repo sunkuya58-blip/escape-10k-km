@@ -2,7 +2,7 @@ export const storyData = {
   start: {
     id: "start",
     title: "약속의 땅을 향하여",
-    text: "이곳은 북한. {playerName}, 당신은 자유를 찾아 목숨을 건 여정을 시작하려 합니다.\n\n차가운 바람이 부는 밤, 꽁꽁 언 두만강이 당신 앞에 펼쳐져 있습니다.",
+    text: "{playerName}은(는) 북한 {hometown}에서 {birthYear}년에 태어났다.\n\n하지만 지독한 가난과 끝없는 통제 속에서 {playerName}의 삶은 점차 피폐해졌다. 결국 자유를 찾아 목숨을 건 여정을 결심한 당신.\n\n차가운 바람이 부는 밤, 꽁꽁 언 두만강이 당신 앞에 펼쳐져 있다.",
     image: "/tumen_river.png",
     bibleVerse: `"두려워하지 말라 내가 너와 함께 함이라 놀라지 말라 나는 네 하나님이 됨이라" (이사야 41:10)`,
     choices: [
