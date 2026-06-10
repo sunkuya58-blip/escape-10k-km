@@ -6,15 +6,22 @@ import './App.css';
 function App() {
   const [currentNodeId, setCurrentNodeId] = useState('start');
   const [chances, setChances] = useState(5);
+  const [inventory, setInventory] = useState([]);
 
   const currentNode = storyData[currentNodeId];
 
-  const handleChoice = (nextId) => {
-    if (nextId === 'start') {
+  const handleChoice = (choice) => {
+    if (choice.nextId === 'start') {
       setChances(5);
+      setInventory([]);
     }
 
-    const nextNode = storyData[nextId];
+    // 아이템 획득 로직
+    if (choice.gainItem && !inventory.includes(choice.gainItem)) {
+      setInventory([...inventory, choice.gainItem]);
+    }
+
+    const nextNode = storyData[choice.nextId];
     
     if (nextNode.isFailure) {
       const newChances = chances - 1;
@@ -25,19 +32,17 @@ function App() {
         return;
       }
       playGameOverSound();
-    } else if (nextNode.isEnding) {
-      if (nextNode.isBadEnding) {
+    } else if (nextNode.isEnding || nextNode.isTotalGameOver) {
+      if (nextNode.isBadEnding || nextNode.isTotalGameOver) {
         playGameOverSound();
       } else {
         playSuccessSound();
       }
-    } else if (nextNode.isTotalGameOver) {
-      playGameOverSound();
     } else {
       playClickSound();
     }
 
-    setCurrentNodeId(nextId);
+    setCurrentNodeId(choice.nextId);
   };
 
   const renderHearts = () => {
@@ -53,6 +58,7 @@ function App() {
       <header className="game-header">
         <div className="status-bar">
           <div className="lives">생존 기회: {renderHearts()}</div>
+          <div className="inventory">가방: {inventory.length === 0 ? '비어있음' : inventory.join(', ')}</div>
         </div>
         <h1>{currentNode.title}</h1>
       </header>
@@ -63,21 +69,30 @@ function App() {
         </div>
         
         <div className="text-container">
+          {currentNode.bibleVerse && (
+            <div className="bible-verse">{currentNode.bibleVerse}</div>
+          )}
           {currentNode.text.split('\n').map((line, index) => (
             <p key={index}>{line}</p>
           ))}
         </div>
 
         <div className="choices-container">
-          {currentNode.choices.map((choice, index) => (
-            <button 
-              key={index} 
-              className={`choice-button ${currentNode.isFailure || currentNode.isTotalGameOver ? 'game-over-btn' : ''} ${currentNode.isEnding ? 'ending-btn' : ''}`}
-              onClick={() => handleChoice(choice.nextId)}
-            >
-              {choice.text}
-            </button>
-          ))}
+          {currentNode.choices.map((choice, index) => {
+            // 인벤토리에 필요한 아이템이 없으면 선택지를 숨김
+            if (choice.requiredItem && !inventory.includes(choice.requiredItem)) {
+              return null;
+            }
+            return (
+              <button 
+                key={index} 
+                className={`choice-button ${currentNode.isFailure || currentNode.isTotalGameOver ? 'game-over-btn' : ''} ${currentNode.isEnding ? 'ending-btn' : ''} ${choice.requiredItem ? 'item-choice-btn' : ''}`}
+                onClick={() => handleChoice(choice)}
+              >
+                {choice.text}
+              </button>
+            );
+          })}
         </div>
       </main>
 
