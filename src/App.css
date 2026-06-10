@@ -160,6 +160,64 @@ body {
   background-color: rgba(251, 191, 36, 0.1);
 }
 
+/* Intro Screen Styles */
+.intro-screen {
+  justify-content: center;
+}
+
+.intro-subtitle {
+  color: #94a3b8;
+  font-size: 1.2rem;
+  margin-top: -10px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.intro-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh;
+}
+
+.name-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+}
+
+.name-form label {
+  font-size: 1.1rem;
+  color: #fbbf24;
+}
+
+.name-form input {
+  padding: 14px;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.4);
+  color: white;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.name-form input:focus {
+  border-color: #fbbf24;
+}
+
+.start-btn {
+  background-color: var(--accent-color);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
 .game-over-btn {
   border-color: rgba(239, 68, 68, 0.5);
   text-align: center;

@@ -1,8 +1,8 @@
 export const storyData = {
   start: {
     id: "start",
-    title: "1만 킬로미터",
-    text: "이곳은 북한. {playerName}, 당신은 자유를 찾아 목숨을 건 1만 킬로미터의 여정을 시작하려 합니다.\n\n차가운 바람이 부는 밤, 꽁꽁 언 두만강이 당신 앞에 펼쳐져 있습니다.",
+    title: "약속의 땅을 향하여",
+    text: "이곳은 북한. {playerName}, 당신은 자유를 찾아 목숨을 건 여정을 시작하려 합니다.\n\n차가운 바람이 부는 밤, 꽁꽁 언 두만강이 당신 앞에 펼쳐져 있습니다.",
     image: "/tumen_river.png",
     bibleVerse: `"두려워하지 말라 내가 너와 함께 함이라 놀라지 말라 나는 네 하나님이 됨이라" (이사야 41:10)`,
     choices: [
@@ -167,7 +167,7 @@ export const storyData = {
     image: "/mekong_river.png",
     bibleVerse: `"네가 물 가운데로 지날 때에 내가 너와 함께 할 것이라 강을 건널 때에 물이 너를 침몰하지 못할 것이며" (이사야 43:2)`,
     choices: [
-      { text: "수퍼맨 목사님이 은밀히 준비한 배에 탑승한다", nextId: "ending_korea" },
+      { text: "대영교회 목사님이 은밀히 준비한 배에 탑승한다", nextId: "ending_korea" },
       { text: "위험을 피해 태국 현지인 마을에 몰래 스며든다", nextId: "ending_thai" },
       { text: "너무 무서워 아침이 밝을 때까지 강둑에서 기다린다", nextId: "ending_bad" }
     ]
@@ -175,7 +175,7 @@ export const storyData = {
   ending_korea: {
     id: "ending_korea",
     title: "진엔딩: 완전한 자유",
-    text: "무사히 태국 대사관을 거쳐, 대한민국 인천국제공항에 도착했습니다!\n\n수퍼맨 목사님의 도움과 {playerName}님의 용기가 기적을 낳았습니다. 진정한 자유의 땅에 오신 것을 환영합니다.",
+    text: "무사히 태국 대사관을 거쳐, 대한민국 인천국제공항에 도착했습니다!\n\n대영교회 목사님의 도움과 {playerName}님의 용기가 기적을 낳았습니다. 진정한 자유의 땅에 오신 것을 환영합니다.",
     image: "/south_korea.png",
     bibleVerse: `"수고하고 무거운 짐 진 자들아 다 내게로 오라 내가 너희를 쉬게 하리라" (마태복음 11:28)`,
     isEnding: true,
@@ -197,7 +197,7 @@ export const storyData = {
   ending_bad: {
     id: "ending_bad",
     title: "배드 엔딩: 아오지 탄광",
-    text: "아침이 밝자 라오스 국경 순찰대에게 잡혀 강제 북송되었습니다. 기독교인(수퍼맨 목사)과 접촉하려 한 죄로 {playerName}은(는) 악명 높은 '아오지 탄광(정치범수용소)'에 수감되었습니다...",
+    text: "아침이 밝자 라오스 국경 순찰대에게 잡혀 강제 북송되었습니다. 기독교인(대영교회 목사)과 접촉하려 한 죄로 {playerName}은(는) 악명 높은 '아오지 탄광(정치범수용소)'에 수감되었습니다...",
     image: "/laos_jungle.png",
     isEnding: true,
     isBadEnding: true,
@@ -208,7 +208,7 @@ export const storyData = {
   total_gameover: {
     id: "total_gameover",
     title: "완전한 게임 오버 (정치범 수용소)",
-    text: "주어진 5번의 생존 기회를 모두 잃었습니다... 체력이 완전히 바닥나고 수비대에게 포위되었습니다. {playerName}은(는) 반동분자로 몰려 가족과 함께 관리소로 끌려가며 1만 킬로미터의 여정은 비극으로 끝났습니다.",
+    text: "주어진 5번의 생존 기회를 모두 잃었습니다... 체력이 완전히 바닥나고 수비대에게 포위되었습니다. {playerName}은(는) 반동분자로 몰려 가족과 함께 관리소로 끌려가며 자유를 향한 여정은 비극으로 끝났습니다.",
     image: "/tumen_river.png",
     isTotalGameOver: true,
     choices: [

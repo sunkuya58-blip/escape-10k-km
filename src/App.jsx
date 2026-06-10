@@ -4,9 +4,57 @@ import { playClickSound, playGameOverSound, playSuccessSound } from './audio';
 import './App.css';
 
 function App() {
+  const [playerName, setPlayerName] = useState('');
+  const [isGameStarted, setIsGameStarted] = useState(false);
+  
   const [currentNodeId, setCurrentNodeId] = useState('start');
   const [chances, setChances] = useState(5);
   const [inventory, setInventory] = useState([]);
+
+  // {playerName} 치환 함수
+  const parseText = (text) => {
+    if (!text) return '';
+    return text.replace(/{playerName}/g, playerName);
+  };
+
+  const handleStartGame = (e) => {
+    e.preventDefault();
+    if (playerName.trim() === '') {
+      alert("이름을 입력해주세요!");
+      return;
+    }
+    playClickSound();
+    setIsGameStarted(true);
+  };
+
+  if (!isGameStarted) {
+    return (
+      <div className="game-container intro-screen">
+        <header className="game-header">
+          <h1>약속의 땅을 향하여</h1>
+          <p className="intro-subtitle">목숨을 건 자유를 향한 여정</p>
+        </header>
+        <main className="game-content intro-content">
+          <form onSubmit={handleStartGame} className="name-form">
+            <label htmlFor="playerName">당신의 이름을 알려주세요</label>
+            <input 
+              type="text" 
+              id="playerName" 
+              value={playerName} 
+              onChange={(e) => setPlayerName(e.target.value)} 
+              placeholder="이름 입력 (예: 홍길동)"
+              autoComplete="off"
+              autoFocus
+            />
+            <button type="submit" className="choice-button start-btn">게임 시작하기</button>
+          </form>
+        </main>
+        <footer className="game-footer">
+          <p>제작: 태희아빠</p>
+        </footer>
+      </div>
+    );
+  }
 
   const currentNode = storyData[currentNodeId];
 
@@ -16,7 +64,6 @@ function App() {
       setInventory([]);
     }
 
-    // 아이템 획득 로직
     if (choice.gainItem && !inventory.includes(choice.gainItem)) {
       setInventory([...inventory, choice.gainItem]);
     }
@@ -60,7 +107,7 @@ function App() {
           <div className="lives">생존 기회: {renderHearts()}</div>
           <div className="inventory">가방: {inventory.length === 0 ? '비어있음' : inventory.join(', ')}</div>
         </div>
-        <h1>{currentNode.title}</h1>
+        <h1>{parseText(currentNode.title)}</h1>
       </header>
 
       <main className="game-content">
@@ -72,14 +119,13 @@ function App() {
           {currentNode.bibleVerse && (
             <div className="bible-verse">{currentNode.bibleVerse}</div>
           )}
-          {currentNode.text.split('\n').map((line, index) => (
+          {parseText(currentNode.text).split('\n').map((line, index) => (
             <p key={index}>{line}</p>
           ))}
         </div>
 
         <div className="choices-container">
           {currentNode.choices.map((choice, index) => {
-            // 인벤토리에 필요한 아이템이 없으면 선택지를 숨김
             if (choice.requiredItem && !inventory.includes(choice.requiredItem)) {
               return null;
             }
@@ -89,7 +135,7 @@ function App() {
                 className={`choice-button ${currentNode.isFailure || currentNode.isTotalGameOver ? 'game-over-btn' : ''} ${currentNode.isEnding ? 'ending-btn' : ''} ${choice.requiredItem ? 'item-choice-btn' : ''}`}
                 onClick={() => handleChoice(choice)}
               >
-                {choice.text}
+                {parseText(choice.text)}
               </button>
             );
           })}
