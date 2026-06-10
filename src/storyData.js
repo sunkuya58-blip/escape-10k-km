@@ -17,7 +17,7 @@ export const storyData = {
     text: "얼음장 같은 물살을 헤치고 무사히 강을 건너 중국 땅에 발을 디뎠습니다. '{playerName}, 어서 도망쳐야 해!' 하지만 기뻐할 틈도 없이 멀리서 탐지견이 짖는 소리가 들려옵니다.",
     image: "/tumen_river.png",
     choices: [
-      { text: "소리가 나지 않는 방향으로 재빨리 도망친다", nextId: "stage2_china" },
+      { text: "소리가 나지 않는 방향으로 재빨리 도망친다", nextId: "stage1_action_dog" },
       { text: "갈대밭에 엎드려 숨을 죽인다", nextId: "gameover_dog" }
     ]
   },
@@ -27,9 +27,21 @@ export const storyData = {
     text: "무거운 발걸음이었지만 꽁꽁 언 강을 건넸습니다. 중국 땅에 발을 딛자 멀리서 탐지견 소리가 들려옵니다. '{playerName}, 정신 차리자. 다행히 비상금은 젖지 않았어.'",
     image: "/tumen_river.png",
     choices: [
-      { text: "소리가 나지 않는 방향으로 재빨리 도망친다", nextId: "stage2_china" },
+      { text: "소리가 나지 않는 방향으로 재빨리 도망친다", nextId: "stage1_action_dog" },
       { text: "갈대밭에 엎드려 숨을 죽인다", nextId: "gameover_dog" }
     ]
+  },
+  stage1_action_dog: {
+    id: "stage1_action_dog",
+    title: "전력 질주 (탐지견 추격)",
+    text: "탐지견이 맹렬하게 짖으며 당신을 쫓아옵니다! 숨이 턱 끝까지 차오르지만 여기서 잡히면 끝입니다. 무조건 뒤도 돌아보지 말고 뛰세요!!",
+    image: "/tumen_river.png",
+    isActionEvent: true,
+    requiredClicks: 30,
+    timeLimit: 10,
+    successNextId: "stage2_china",
+    timeoutNextId: "gameover_dog",
+    choices: []
   },
   stage1_wait: {
     id: "stage1_wait",
@@ -76,14 +88,40 @@ export const storyData = {
   stage2_train: {
     id: "stage2_train",
     title: "중국 횡단 열차",
-    text: "라오스 국경으로 향하는 긴 기차에 몸을 실었습니다. 긴장이 조금 풀리려던 찰나, 객차 앞쪽에서 공안이 신분증을 검사하며 다가옵니다. '{playerName}, 어떡하지...?'",
+    text: "라오스 국경으로 향하는 긴 기차에 몸을 실었습니다. 긴장이 조금 풀리려던 찰나, 객차 앞쪽에서 공안이 다가옵니다. '{playerName}, 어떡하지...?'",
     image: "/china_hideout.png",
     bibleVerse: `"여호와는 나의 빛이요 나의 구원이시니 내가 누구를 두려워하리요" (시편 27:1)`,
     choices: [
       { text: "조용히 화장실로 숨어 문을 잠근다", nextId: "gameover_train_toilet" },
-      { text: "자는 척하며 위기를 넘기려 한다", nextId: "gameover_train_sleep" },
       { text: "[아이템 사용] 당당하게 위조 신분증을 보여준다", nextId: "stage3_laos", requiredItem: "위조 신분증" },
+      { text: "말투를 고치고 진짜 북한 사람임을 증명하려 시도한다", nextId: "quiz1" },
       { text: "기차가 느려지는 틈을 타 창밖으로 뛰어내린다", nextId: "stage3_laos" }
+    ]
+  },
+  quiz1: {
+    id: "quiz1",
+    title: "북한어 검열 (1/2)",
+    text: "공안이 당신을 빤히 쳐다보며 묻습니다. '진짜 조선 사람이 맞소? 그렇다면 기차에서 먹으려고 싸 온 [도시락]을 조선 말로 뭐라고 부르는지 대답해 보시오.'",
+    image: "/china_hideout.png",
+    timeLimit: 10,
+    timeoutNextId: "gameover_train_sleep",
+    choices: [
+      { text: "곽밥", nextId: "quiz2" },
+      { text: "통밥", nextId: "gameover_train_sleep" },
+      { text: "함지밥", nextId: "gameover_train_sleep" }
+    ]
+  },
+  quiz2: {
+    id: "quiz2",
+    title: "북한어 검열 (2/2)",
+    text: "공안이 고개를 끄덕이더니 마지막 질문을 던집니다. '좋소. 그럼 요즘 평양 처녀들이 몸매 관리를 위해 [다이어트]를 한다던데, 그걸 뭐라고 부르오?'",
+    image: "/china_hideout.png",
+    timeLimit: 10,
+    timeoutNextId: "gameover_train_sleep",
+    choices: [
+      { text: "살덜기", nextId: "gameover_train_sleep" },
+      { text: "몸줄이기", nextId: "gameover_train_sleep" },
+      { text: "살까기", nextId: "stage3_laos" }
     ]
   },
   gameover_train_toilet: {
@@ -99,7 +137,7 @@ export const storyData = {
   gameover_train_sleep: {
     id: "gameover_train_sleep",
     title: "검문 체포 (강제 북송)",
-    text: "공안은 매섭게 흔들어 깨운 뒤 신분증을 요구했습니다. 북한 억양을 들키고 북송될 뻔했습니다. 생존 기회를 1번 잃었습니다.",
+    text: "질문에 우물쭈물하거나 틀린 답을 하자 공안이 매섭게 돌변합니다! 북송될 뻔한 위기에서 겨우 도망쳤으나 생존 기회를 1번 잃었습니다.",
     image: "/china_hideout.png",
     isFailure: true,
     choices: [
@@ -131,13 +169,25 @@ export const storyData = {
   stage3_mountain: {
     id: "stage3_mountain",
     title: "라오스 야간 산행",
-    text: "메콩강으로 가려면 이 가파른 돌산을 넘어야 합니다. 숨이 턱 끝까지 차오르는데, 캄캄한 밤하늘에 국경 수비대의 강렬한 서치라이트 불빛이 산등성이를 훑고 지나갑니다.",
+    text: "메콩강으로 가려면 이 가파른 돌산을 넘어야 합니다. 캄캄한 밤하늘에 국경 수비대의 강렬한 서치라이트 불빛이 산등성이를 훑고 지나갑니다!",
     image: "/laos_jungle.png",
     bibleVerse: `"내가 산을 향하여 눈을 들리라 나의 도움이 어디서 올까 나의 도움은 천지를 지으신 여호와에게서로다" (시편 121:1-2)`,
+    timeLimit: 10,
+    timeoutNextId: "gameover_mountain_timeout",
     choices: [
       { text: "서치라이트 불빛을 피해 절벽 쪽 좁은 길로 걷는다", nextId: "gameover_mountain_fall" },
       { text: "불빛이 지나갈 때까지 나무 밑에 납작 엎드려 기다린다", nextId: "stage4_mekong" },
       { text: "불빛을 피해 무작정 앞만 보고 산을 넘는다", nextId: "gameover_mountain_run" }
+    ]
+  },
+  gameover_mountain_timeout: {
+    id: "gameover_mountain_timeout",
+    title: "서치라이트 발각",
+    text: "머뭇거리는 사이 서치라이트 불빛이 당신을 비췄습니다! 수비대의 총격에 부상을 입고 기회를 1번 잃었습니다.",
+    image: "/laos_jungle.png",
+    isFailure: true,
+    choices: [
+      { text: "필사적으로 도망쳐 강에 도착하기", nextId: "stage4_mekong" }
     ]
   },
   gameover_mountain_fall: {
@@ -179,6 +229,18 @@ export const storyData = {
     image: "/south_korea.png",
     bibleVerse: `"수고하고 무거운 짐 진 자들아 다 내게로 오라 내가 너희를 쉬게 하리라" (마태복음 11:28)`,
     isEnding: true,
+    choices: [
+      { text: "처음부터 다시 플레이", nextId: "start" }
+    ]
+  },
+  ending_hidden: {
+    id: "ending_hidden",
+    title: "히든 진엔딩: 기적의 생존자",
+    text: "단 한 번의 위기(하트 감소)도 겪지 않고, 북한어 퀴즈와 모든 액션을 완벽하게 이겨냈습니다!\n\n빛나는 용기와 대영교회 목사님의 도움으로 완벽한 탈출에 성공한 {playerName}님. 당신은 북한 인권의 상징이자 '기적의 생존자'로 역사에 남을 것입니다.",
+    image: "/south_korea.png",
+    bibleVerse: `"여호와께서 너를 지켜 모든 환난을 면하게 하시며 또 네 영혼을 지키시리로다" (시편 121:7)`,
+    isEnding: true,
+    isHiddenEnding: true,
     choices: [
       { text: "처음부터 다시 플레이", nextId: "start" }
     ]

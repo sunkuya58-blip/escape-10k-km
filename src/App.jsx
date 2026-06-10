@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { storyData } from './storyData';
-import { playClickSound, playGameOverSound, playSuccessSound } from './audio';
+import { playClickSound, playGameOverSound, playSuccessSound, startBGM, stopBGM, startHeartbeat, stopHeartbeat, playTimerTick, playHiddenSuccessSound, playActionClickSound } from './audio';
 import './App.css';
 
 function App() {
@@ -12,15 +12,15 @@ function App() {
   const [currentNodeId, setCurrentNodeId] = useState('start');
   const [chances, setChances] = useState(5);
   const [inventory, setInventory] = useState([]);
+  const [timeLeft, setTimeLeft] = useState(null);
+  const [clickCount, setClickCount] = useState(0);
 
-  // 생년월일에서 연도 4자리 추출 (예: 90 -> 1990, 05 -> 2005)
   const getBirthYear = (yy) => {
     const yearNum = parseInt(yy, 10);
     if (yearNum <= 24) return `20${yy}`;
     return `19${yy}`;
   };
 
-  // {playerName}, {birthYear}, {hometown} 치환 함수
   const parseText = (text) => {
     if (!text) return '';
     let parsed = text.replace(/{playerName}/g, playerName);
@@ -44,6 +44,97 @@ function App() {
     }
     playClickSound();
     setIsGameStarted(true);
+    startBGM();
+  };
+
+  const currentNode = storyData[currentNodeId];
+
+  useEffect(() => {
+    if (chances === 1) {
+      startHeartbeat();
+    } else {
+      stopHeartbeat();
+    }
+  }, [chances]);
+
+  useEffect(() => {
+    if (currentNode.timeLimit) {
+      setTimeLeft(currentNode.timeLimit);
+    } else {
+      setTimeLeft(null);
+    }
+    setClickCount(0);
+  }, [currentNodeId, currentNode.timeLimit]);
+
+  useEffect(() => {
+    if (timeLeft === null) return;
+    if (timeLeft <= 0) {
+      playGameOverSound();
+      handleChoice({ nextId: currentNode.timeoutNextId }, true);
+      return;
+    }
+    const timerId = setTimeout(() => {
+      playTimerTick();
+      setTimeLeft(timeLeft - 1);
+    }, 1000);
+    return () => clearTimeout(timerId);
+  }, [timeLeft, currentNode.timeoutNextId]);
+
+  const handleChoice = (choice, isTimeout = false, isActionSuccess = false) => {
+    let nextId = choice.nextId;
+
+    if (nextId === 'ending_korea') {
+      if (chances === 5 && inventory.includes('위조 신분증') && inventory.includes('낡은 나침반')) {
+        nextId = 'ending_hidden';
+      }
+    }
+
+    if (nextId === 'start') {
+      setChances(5);
+      setInventory([]);
+      startBGM();
+    }
+
+    if (choice.gainItem && !inventory.includes(choice.gainItem)) {
+      setInventory([...inventory, choice.gainItem]);
+    }
+
+    const nextNode = storyData[nextId];
+    
+    if (nextNode.isFailure) {
+      const newChances = chances - 1;
+      setChances(newChances);
+      if (newChances <= 0) {
+        playGameOverSound();
+        setCurrentNodeId('total_gameover');
+        stopBGM();
+        return;
+      }
+      if (!isTimeout) playGameOverSound();
+    } else if (nextNode.isEnding || nextNode.isTotalGameOver) {
+      stopBGM();
+      stopHeartbeat();
+      if (nextNode.isBadEnding || nextNode.isTotalGameOver) {
+        playGameOverSound();
+      } else if (nextNode.isHiddenEnding) {
+        playHiddenSuccessSound();
+      } else {
+        playSuccessSound();
+      }
+    } else {
+      if (!isTimeout && !isActionSuccess) playClickSound();
+    }
+
+    setCurrentNodeId(nextId);
+  };
+
+  const handleActionClick = () => {
+    playActionClickSound();
+    const newCount = clickCount + 1;
+    setClickCount(newCount);
+    if (newCount >= currentNode.requiredClicks) {
+      handleChoice({ nextId: currentNode.successNextId }, false, true);
+    }
   };
 
   if (!isGameStarted) {
@@ -97,42 +188,6 @@ function App() {
     );
   }
 
-  const currentNode = storyData[currentNodeId];
-
-  const handleChoice = (choice) => {
-    if (choice.nextId === 'start') {
-      setChances(5);
-      setInventory([]);
-    }
-
-    if (choice.gainItem && !inventory.includes(choice.gainItem)) {
-      setInventory([...inventory, choice.gainItem]);
-    }
-
-    const nextNode = storyData[choice.nextId];
-    
-    if (nextNode.isFailure) {
-      const newChances = chances - 1;
-      setChances(newChances);
-      if (newChances <= 0) {
-        playGameOverSound();
-        setCurrentNodeId('total_gameover');
-        return;
-      }
-      playGameOverSound();
-    } else if (nextNode.isEnding || nextNode.isTotalGameOver) {
-      if (nextNode.isBadEnding || nextNode.isTotalGameOver) {
-        playGameOverSound();
-      } else {
-        playSuccessSound();
-      }
-    } else {
-      playClickSound();
-    }
-
-    setCurrentNodeId(choice.nextId);
-  };
-
   const renderHearts = () => {
     const hearts = [];
     for (let i = 0; i < 5; i++) {
@@ -142,12 +197,20 @@ function App() {
   };
 
   return (
-    <div className="game-container">
+    <div className={`game-container ${currentNode.isHiddenEnding ? 'hidden-ending' : ''}`}>
       <header className="game-header">
         <div className="status-bar">
           <div className="lives">생존 기회: {renderHearts()}</div>
           <div className="inventory">가방: {inventory.length === 0 ? '비어있음' : inventory.join(', ')}</div>
         </div>
+        
+        {timeLeft !== null && (
+          <div className="timer-bar-container">
+            <div className="timer-bar" style={{ width: `${(timeLeft / currentNode.timeLimit) * 100}%` }}></div>
+            <div className="timer-text">{timeLeft}초 남음!</div>
+          </div>
+        )}
+
         <h1>{parseText(currentNode.title)}</h1>
       </header>
 
@@ -165,24 +228,35 @@ function App() {
           ))}
         </div>
 
-        <div className="choices-container">
-          {currentNode.choices.map((choice, index) => {
-            if (choice.requiredItem && !inventory.includes(choice.requiredItem)) {
-              return null;
-            }
-            return (
-              <button 
-                key={index} 
-                className={`choice-button ${currentNode.isFailure || currentNode.isTotalGameOver ? 'game-over-btn' : ''} ${currentNode.isEnding ? 'ending-btn' : ''} ${choice.requiredItem ? 'item-choice-btn' : ''}`}
-                onClick={() => handleChoice(choice)}
-              >
-                {parseText(choice.text)}
-              </button>
-            );
-          })}
-        </div>
+        {currentNode.isActionEvent ? (
+          <div className="action-container">
+            <div className="action-progress-bg">
+              <div className="action-progress-fill" style={{width: `${Math.min((clickCount / currentNode.requiredClicks) * 100, 100)}%`}}></div>
+              <span className="action-progress-text">도주 게이지: {Math.min(Math.floor((clickCount / currentNode.requiredClicks) * 100), 100)}%</span>
+            </div>
+            <button className="action-mash-btn" onClick={handleActionClick}>
+              🔥 전력 질주 (터치 연타!) 🔥
+            </button>
+          </div>
+        ) : (
+          <div className="choices-container">
+            {currentNode.choices.map((choice, index) => {
+              if (choice.requiredItem && !inventory.includes(choice.requiredItem)) {
+                return null;
+              }
+              return (
+                <button 
+                  key={index} 
+                  className={`choice-button ${currentNode.isFailure || currentNode.isTotalGameOver ? 'game-over-btn' : ''} ${currentNode.isEnding ? 'ending-btn' : ''} ${choice.requiredItem ? 'item-choice-btn' : ''}`}
+                  onClick={() => handleChoice(choice)}
+                >
+                  {parseText(choice.text)}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </main>
-
     </div>
   );
 }
