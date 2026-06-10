@@ -2,7 +2,7 @@ export const storyData = {
   start: {
     id: "start",
     title: "1만 킬로미터",
-    text: "이곳은 북한. 당신은 자유를 찾아 목숨을 건 1만 킬로미터의 여정을 시작하려 합니다.\n\n차가운 바람이 부는 밤, 꽁꽁 언 두만강이 당신 앞에 펼쳐져 있습니다.",
+    text: "이곳은 북한. {playerName}, 당신은 자유를 찾아 목숨을 건 1만 킬로미터의 여정을 시작하려 합니다.\n\n차가운 바람이 부는 밤, 꽁꽁 언 두만강이 당신 앞에 펼쳐져 있습니다.",
     image: "/tumen_river.png",
     bibleVerse: `"두려워하지 말라 내가 너와 함께 함이라 놀라지 말라 나는 네 하나님이 됨이라" (이사야 41:10)`,
     choices: [
@@ -14,7 +14,7 @@ export const storyData = {
   stage1_cross_light: {
     id: "stage1_cross_light",
     title: "두만강 도하",
-    text: "얼음장 같은 물살을 헤치고 무사히 강을 건너 중국 땅에 발을 디뎠습니다. 하지만 기뻐할 틈도 없이 멀리서 탐지견이 짖는 소리가 들려옵니다.",
+    text: "얼음장 같은 물살을 헤치고 무사히 강을 건너 중국 땅에 발을 디뎠습니다. '{playerName}, 어서 도망쳐야 해!' 하지만 기뻐할 틈도 없이 멀리서 탐지견이 짖는 소리가 들려옵니다.",
     image: "/tumen_river.png",
     choices: [
       { text: "소리가 나지 않는 방향으로 재빨리 도망친다", nextId: "stage2_china" },
@@ -24,7 +24,7 @@ export const storyData = {
   stage1_cross_money: {
     id: "stage1_cross_money",
     title: "두만강 도하 (비상금 확보)",
-    text: "무거운 발걸음이었지만 꽁꽁 언 강을 건넸습니다. 중국 땅에 발을 딛자 멀리서 탐지견 소리가 들려옵니다. 다행히 비상금은 젖지 않았습니다.",
+    text: "무거운 발걸음이었지만 꽁꽁 언 강을 건넸습니다. 중국 땅에 발을 딛자 멀리서 탐지견 소리가 들려옵니다. '{playerName}, 정신 차리자. 다행히 비상금은 젖지 않았어.'",
     image: "/tumen_river.png",
     choices: [
       { text: "소리가 나지 않는 방향으로 재빨리 도망친다", nextId: "stage2_china" },
@@ -34,7 +34,7 @@ export const storyData = {
   stage1_wait: {
     id: "stage1_wait",
     title: "발각 (노동단련대)",
-    text: "너무 오래 지체했습니다. 순찰을 돌던 경비대에게 들켜 단순 국경 도하 실패로 '노동단련대'에서 1년간 강제 노역을 해야 합니다. 생존 기회를 1번 잃었습니다!",
+    text: "너무 오래 지체했습니다. 순찰을 돌던 경비대에게 들켜 단순 국경 도하 실패로 '노동단련대'에서 1년간 강제 노역을 해야 합니다. '{playerName}! 일어나서 일 못 해!?' 간수의 호통이 울려 퍼집니다. 생존 기회를 1번 잃었습니다!",
     image: "/tumen_river.png",
     isFailure: true,
     choices: [
@@ -44,7 +44,7 @@ export const storyData = {
   gameover_dog: {
     id: "gameover_dog",
     title: "체포 위기 (노동단련대)",
-    text: "추격하던 중국 공안의 탐지견에게 냄새를 들켜 강제 북송되었습니다. 탈북 시도 죄로 노동단련대로 끌려가 기회를 1번 잃었습니다.",
+    text: "추격하던 중국 공안의 탐지견에게 냄새를 들켜 강제 북송되었습니다. 탈북 시도 죄로 노동단련대로 끌려가 기회를 1번 잃었습니다. {playerName}의 몸과 마음이 지쳐갑니다.",
     image: "/tumen_river.png",
     isFailure: true,
     choices: [
@@ -54,63 +54,116 @@ export const storyData = {
   stage2_china: {
     id: "stage2_china",
     title: "중국의 은신처",
-    text: "도망친 끝에 브로커의 낡은 은신처에 도착했습니다. 하지만 누군가 문을 쾅쾅 두드립니다.\n\n문을 두드리는 소리에 심장이 덜컥 내려앉습니다.",
+    text: "도망친 끝에 브로커의 낡은 은신처에 도착했습니다. 하지만 누군가 문을 쾅쾅 두드립니다.\n\n'{playerName}, 안에 있는 거 다 안다! 문 열어!' 공안의 목소리에 심장이 덜컥 내려앉습니다.",
     image: "/china_hideout.png",
     bibleVerse: `"환난 날에 나를 부르라 내가 너를 건지리니 네가 나를 영화롭게 하리로다" (시편 50:15)`,
     choices: [
-      { text: "창문을 깨고 뒷골목으로 빠져나간다", nextId: "stage3_laos" },
+      { text: "창문을 깨고 뒷골목으로 빠져나간다 (나침반 획득)", nextId: "stage2_train", gainItem: "낡은 나침반" },
       { text: "방문 뒤에 숨어 누군지 확인한다", nextId: "gameover_hide" },
-      { text: "[아이템 사용] 비상금을 쥐어주며 공안의 눈을 속인다", nextId: "stage3_laos_bribe", requiredItem: "비상금" }
+      { text: "[아이템 사용] 비상금을 쥐어주며 브로커에게 신분증을 산다", nextId: "stage2_train", requiredItem: "비상금", gainItem: "위조 신분증" }
     ]
   },
   gameover_hide: {
     id: "gameover_hide",
     title: "공안 급습 (강제 북송)",
-    text: "공안이 들이닥쳤습니다. 북송되어 관리소(정치범수용소)로 끌려갈 뻔 했으나, 운 좋게 이송 중 도망쳐 나왔습니다. 부상으로 기회를 1번 잃었습니다.",
+    text: "공안이 들이닥쳤습니다. 북송되어 관리소(정치범수용소)로 끌려갈 뻔 했으나, {playerName}은(는) 운 좋게 이송 중 도망쳐 나왔습니다. 부상으로 기회를 1번 잃었습니다.",
     image: "/china_hideout.png",
     isFailure: true,
     choices: [
-      { text: "서둘러 라오스 국경으로 향하기", nextId: "stage3_laos" }
+      { text: "서둘러 남쪽 기차역으로 도망가기", nextId: "stage2_train" }
     ]
   },
-  stage3_laos_bribe: {
-    id: "stage3_laos_bribe",
-    title: "라오스 정글로 (뇌물 통과)",
-    text: "비상금을 건네자 공안은 모른 척 지나갔습니다! 짐을 챙기던 중 은신처 바닥에서 [낡은 나침반]을 발견했습니다. 안전하게 라오스 정글에 진입합니다.",
-    image: "/laos_jungle.png",
-    bibleVerse: `"내가 사망의 음침한 골짜기로 다닐지라도 해를 두려워하지 않을 것은 주께서 나와 함께 하심이라" (시편 23:4)`,
-    gainItem: "낡은 나침반",
+  stage2_train: {
+    id: "stage2_train",
+    title: "중국 횡단 열차",
+    text: "라오스 국경으로 향하는 긴 기차에 몸을 실었습니다. 긴장이 조금 풀리려던 찰나, 객차 앞쪽에서 공안이 신분증을 검사하며 다가옵니다. '{playerName}, 어떡하지...?'",
+    image: "/china_hideout.png",
+    bibleVerse: `"여호와는 나의 빛이요 나의 구원이시니 내가 누구를 두려워하리요" (시편 27:1)`,
     choices: [
-      { text: "누군가 지나간 흔적이 뚜렷한 진흙길을 따라간다", nextId: "gameover_trap" },
-      { text: "수풀이 우거진 험난한 길을 직접 개척하며 나아간다", nextId: "stage4_mekong" },
-      { text: "[아이템 사용] 나침반을 보고 정확한 남쪽 길을 찾아간다", nextId: "stage4_mekong", requiredItem: "낡은 나침반" }
+      { text: "조용히 화장실로 숨어 문을 잠근다", nextId: "gameover_train_toilet" },
+      { text: "자는 척하며 위기를 넘기려 한다", nextId: "gameover_train_sleep" },
+      { text: "[아이템 사용] 당당하게 위조 신분증을 보여준다", nextId: "stage3_laos", requiredItem: "위조 신분증" },
+      { text: "기차가 느려지는 틈을 타 창밖으로 뛰어내린다", nextId: "stage3_laos" }
+    ]
+  },
+  gameover_train_toilet: {
+    id: "gameover_train_toilet",
+    title: "화장실 발각 (노동단련대)",
+    text: "공안이 강제로 화장실 문을 따고 들어왔습니다. 수상한 사람으로 몰려 조사를 받고, 기회를 1번 잃었습니다. 가까스로 탈출해 다시 길을 나섭니다.",
+    image: "/china_hideout.png",
+    isFailure: true,
+    choices: [
+      { text: "라오스 국경 근처로 숨어들기", nextId: "stage3_laos" }
+    ]
+  },
+  gameover_train_sleep: {
+    id: "gameover_train_sleep",
+    title: "검문 체포 (강제 북송)",
+    text: "공안은 매섭게 흔들어 깨운 뒤 신분증을 요구했습니다. 북한 억양을 들키고 북송될 뻔했습니다. 생존 기회를 1번 잃었습니다.",
+    image: "/china_hideout.png",
+    isFailure: true,
+    choices: [
+      { text: "가까스로 도망쳐 라오스로 향하기", nextId: "stage3_laos" }
     ]
   },
   stage3_laos: {
     id: "stage3_laos",
     title: "라오스 정글의 늪",
-    text: "창문을 깨고 구사일생으로 탈출해 라오스의 험난한 정글에 진입했습니다. 벌레와 굶주림에 지쳐갑니다. 갈림길이 나타났습니다.",
+    text: "구사일생으로 기차를 탈출해 라오스의 험난한 정글에 진입했습니다. 벌레와 굶주림에 지쳐갑니다. {playerName}의 눈앞에 갈림길이 나타났습니다.",
     image: "/laos_jungle.png",
     bibleVerse: `"내가 사망의 음침한 골짜기로 다닐지라도 해를 두려워하지 않을 것은 주께서 나와 함께 하심이라" (시편 23:4)`,
     choices: [
       { text: "누군가 지나간 흔적이 뚜렷한 진흙길을 따라간다", nextId: "gameover_trap" },
-      { text: "수풀이 우거진 험난한 길을 직접 개척하며 나아간다", nextId: "stage4_mekong" }
+      { text: "수풀이 우거진 험난한 길을 직접 개척하며 나아간다", nextId: "stage3_mountain" },
+      { text: "[아이템 사용] 낡은 나침반을 꺼내 정남쪽 길을 찾는다", nextId: "stage3_mountain", requiredItem: "낡은 나침반" }
     ]
   },
   gameover_trap: {
     id: "gameover_trap",
     title: "밀수꾼의 덫 (관리소 위기)",
-    text: "발자국은 악명 높은 인신매매범의 것이었습니다. 자칫하면 북한 보위부에 넘겨져 아오지 탄광(관리소)에 영원히 갇힐 뻔했습니다. 겨우 도망쳐 기회를 1번 잃었습니다.",
+    text: "발자국은 악명 높은 인신매매범의 것이었습니다. 자칫하면 북한 보위부에 넘겨져 {playerName}은(는) 아오지 탄광(관리소)에 영원히 갇힐 뻔했습니다. 겨우 도망쳐 기회를 1번 잃었습니다.",
     image: "/laos_jungle.png",
     isFailure: true,
     choices: [
-      { text: "다른 길로 우회하여 메콩강으로 가기", nextId: "stage4_mekong" }
+      { text: "다른 길로 우회하여 산으로 가기", nextId: "stage3_mountain" }
+    ]
+  },
+  stage3_mountain: {
+    id: "stage3_mountain",
+    title: "라오스 야간 산행",
+    text: "메콩강으로 가려면 이 가파른 돌산을 넘어야 합니다. 숨이 턱 끝까지 차오르는데, 캄캄한 밤하늘에 국경 수비대의 강렬한 서치라이트 불빛이 산등성이를 훑고 지나갑니다.",
+    image: "/laos_jungle.png",
+    bibleVerse: `"내가 산을 향하여 눈을 들리라 나의 도움이 어디서 올까 나의 도움은 천지를 지으신 여호와에게서로다" (시편 121:1-2)`,
+    choices: [
+      { text: "서치라이트 불빛을 피해 절벽 쪽 좁은 길로 걷는다", nextId: "gameover_mountain_fall" },
+      { text: "불빛이 지나갈 때까지 나무 밑에 납작 엎드려 기다린다", nextId: "stage4_mekong" },
+      { text: "불빛을 피해 무작정 앞만 보고 산을 넘는다", nextId: "gameover_mountain_run" }
+    ]
+  },
+  gameover_mountain_fall: {
+    id: "gameover_mountain_fall",
+    title: "절벽 추락 (부상)",
+    text: "어둠 속에서 헛디뎌 가파른 비탈길을 굴러 떨어졌습니다. 끔찍한 고통과 함께 기회를 1번 잃었습니다. {playerName}, 정신을 차려야 합니다.",
+    image: "/laos_jungle.png",
+    isFailure: true,
+    choices: [
+      { text: "고통을 참고 절뚝이며 강으로 향하기", nextId: "stage4_mekong" }
+    ]
+  },
+  gameover_mountain_run: {
+    id: "gameover_mountain_run",
+    title: "수비대 발각",
+    text: "뛰는 소리에 수비대에게 들키고 말았습니다. 총알이 빗발치는 가운데 가까스로 목숨을 건졌으나, 기회를 1번 잃었습니다.",
+    image: "/laos_jungle.png",
+    isFailure: true,
+    choices: [
+      { text: "필사적으로 도망쳐 강에 도착하기", nextId: "stage4_mekong" }
     ]
   },
   stage4_mekong: {
     id: "stage4_mekong",
     title: "메콩강, 마지막 고비",
-    text: "정글을 뚫고 거대한 메콩강에 다다랐습니다. 여기서 당신의 마지막 선택이 최종 엔딩을 결정합니다.",
+    text: "험난한 산을 뚫고 마침내 거대한 메콩강에 다다랐습니다. '{playerName}, 저 강만 건너면 돼.' 여기서 당신의 마지막 선택이 최종 엔딩을 결정합니다.",
     image: "/mekong_river.png",
     bibleVerse: `"네가 물 가운데로 지날 때에 내가 너와 함께 할 것이라 강을 건널 때에 물이 너를 침몰하지 못할 것이며" (이사야 43:2)`,
     choices: [
@@ -122,7 +175,7 @@ export const storyData = {
   ending_korea: {
     id: "ending_korea",
     title: "진엔딩: 완전한 자유",
-    text: "무사히 태국 대사관을 거쳐, 대한민국 인천국제공항에 도착했습니다!\n\n수퍼맨 목사님의 도움과 당신의 용기가 기적을 낳았습니다. 진정한 자유의 땅에 오신 것을 환영합니다.",
+    text: "무사히 태국 대사관을 거쳐, 대한민국 인천국제공항에 도착했습니다!\n\n수퍼맨 목사님의 도움과 {playerName}님의 용기가 기적을 낳았습니다. 진정한 자유의 땅에 오신 것을 환영합니다.",
     image: "/south_korea.png",
     bibleVerse: `"수고하고 무거운 짐 진 자들아 다 내게로 오라 내가 너희를 쉬게 하리라" (마태복음 11:28)`,
     isEnding: true,
@@ -133,7 +186,7 @@ export const storyData = {
   ending_thai: {
     id: "ending_thai",
     title: "노말 엔딩: 미완의 자유",
-    text: "태국의 작은 마을에 무사히 정착했습니다. 북송의 위험은 피했지만 신분증 없이 숨어 지내야 합니다. 언젠가는 온전한 자유를 찾을 수 있기를...",
+    text: "태국의 작은 마을에 무사히 정착했습니다. 북송의 위험은 피했지만 신분증 없이 숨어 지내야 합니다. 언젠가는 {playerName}에게도 온전한 자유가 찾아오기를...",
     image: "/mekong_river.png",
     bibleVerse: `"눈물을 흘리며 씨를 뿌리는 자는 기쁨으로 단을 거두리로다" (시편 126:5)`,
     isEnding: true,
@@ -144,7 +197,7 @@ export const storyData = {
   ending_bad: {
     id: "ending_bad",
     title: "배드 엔딩: 아오지 탄광",
-    text: "아침이 밝자 라오스 국경 순찰대에게 잡혀 강제 북송되었습니다. 기독교인(수퍼맨 목사)과 접촉하려 한 죄로 악명 높은 '아오지 탄광(정치범수용소)'에 수감되었습니다...",
+    text: "아침이 밝자 라오스 국경 순찰대에게 잡혀 강제 북송되었습니다. 기독교인(수퍼맨 목사)과 접촉하려 한 죄로 {playerName}은(는) 악명 높은 '아오지 탄광(정치범수용소)'에 수감되었습니다...",
     image: "/laos_jungle.png",
     isEnding: true,
     isBadEnding: true,
@@ -155,7 +208,7 @@ export const storyData = {
   total_gameover: {
     id: "total_gameover",
     title: "완전한 게임 오버 (정치범 수용소)",
-    text: "주어진 5번의 생존 기회를 모두 잃었습니다... 체력이 완전히 바닥나고 수비대에게 포위되었습니다. 반동분자로 몰려 가족과 함께 관리소로 끌려가며 1만 킬로미터의 여정은 비극으로 끝났습니다.",
+    text: "주어진 5번의 생존 기회를 모두 잃었습니다... 체력이 완전히 바닥나고 수비대에게 포위되었습니다. {playerName}은(는) 반동분자로 몰려 가족과 함께 관리소로 끌려가며 1만 킬로미터의 여정은 비극으로 끝났습니다.",
     image: "/tumen_river.png",
     isTotalGameOver: true,
     choices: [
