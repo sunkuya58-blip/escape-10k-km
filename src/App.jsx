@@ -49,9 +49,6 @@ function App() {
             <button type="submit" className="choice-button start-btn">게임 시작하기</button>
           </form>
         </main>
-        <footer className="game-footer">
-          <p>제작: 태희아빠</p>
-        </footer>
       </div>
     );
   }
@@ -142,9 +139,6 @@ function App() {
         </div>
       </main>
 
-      <footer className="game-footer">
-        <p>제작: 태희아빠</p>
-      </footer>
     </div>
   );
 }
